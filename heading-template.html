@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Heading Structure: Before &amp; After — Team Training</title>
+<style>
+  :root{
+    --bg:#0f1115; --card:#171a21; --card2:#1d212b; --line:#2a2f3a;
+    --text:#e8eaf0; --muted:#9aa3b2;
+    --red:#ff5c5c; --red-bg:rgba(255,92,92,.12);
+    --amber:#ffb224; --amber-bg:rgba(255,178,36,.12);
+    --green:#3ecf72; --green-bg:rgba(62,207,114,.12);
+    --blue:#5aa9ff;
+  }
+  *{box-sizing:border-box; margin:0; padding:0}
+  body{background:var(--bg); color:var(--text); font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; padding-bottom:80px}
+  .wrap{max-width:1060px; margin:0 auto; padding:0 20px}
+  header{padding:48px 0 8px; text-align:center}
+  header h1{font-size:34px; line-height:1.2}
+  header p{color:var(--muted); margin-top:10px; font-size:15px}
+  .stats{display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin:28px 0 8px}
+  .stat{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:18px 14px; text-align:center}
+  .stat b{display:block; font-size:34px; line-height:1}
+  .stat span{color:var(--muted); font-size:13px; display:block; margin-top:8px}
+  .stat.red b{color:var(--red)} .stat.amber b{color:var(--amber)} .stat.green b{color:var(--green)}
+  .rule{background:linear-gradient(90deg,rgba(90,169,255,.12),rgba(62,207,114,.10)); border:1px solid var(--line); border-radius:14px; padding:20px 24px; margin:22px 0; text-align:center; font-size:18px}
+  .rule b{color:var(--blue)}
+  .legend{display:flex; gap:18px; justify-content:center; flex-wrap:wrap; margin:10px 0 26px; color:var(--muted); font-size:14px}
+  .dot{display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:6px}
+  .tag{display:inline-block; font:600 12px/1 ui-monospace,SFMono-Regular,Menlo,monospace; padding:5px 8px; border-radius:6px; border:1px solid var(--line); min-width:34px; text-align:center}
+  .tag.h1{background:#2b3550; color:#9ec1ff; border-color:#3c4a6e}
+  .tag.h2{background:#1f3a2d; color:#7fe0a8; border-color:#2c5741}
+  .tag.h3{background:#203744; color:#7fd0e8; border-color:#2e5265}
+  .tag.h4,.tag.h5,.tag.h6{background:#3d2430; color:#ff9db0; border-color:#5c3242}
+  .tag.p{background:#2a2a2e; color:#b7bcc7; border-color:#3d3f46}
+  .tabs{display:flex; justify-content:center; gap:8px; margin:34px 0 16px}
+  .tabs button{background:var(--card); color:var(--muted); border:1px solid var(--line); padding:10px 22px; border-radius:999px; font-size:15px; font-weight:600; cursor:pointer}
+  .tabs button.active{background:var(--card2); color:var(--text); border-color:var(--blue)}
+  .tree{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:22px; font-size:15px; display:none}
+  .tree.show{display:block}
+  .tree .row{display:flex; align-items:center; gap:10px; padding:4px 0}
+  .i1{margin-left:26px} .i2{margin-left:52px}
+  .strike{color:var(--muted); text-decoration:line-through}
+  .note{font-size:12px; color:var(--muted); margin-left:6px}
+  .bad-note{font-size:12px; color:var(--red); margin-left:6px}
+  h2.sec{margin:44px 0 6px; font-size:24px}
+  p.sub{color:var(--muted); margin-bottom:16px; font-size:14px}
+  .patterns{display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:12px}
+  .pat{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:18px}
+  .pat h3{font-size:15px; margin-bottom:8px; color:var(--amber)}
+  .pat p{font-size:14px; color:var(--muted)}
+  .fixes{display:flex; flex-direction:column; gap:10px}
+  .section-card{background:var(--card); border:1px solid var(--line); border-radius:14px; overflow:hidden}
+  .section-card h3{padding:14px 18px; font-size:15px; background:var(--card2); border-bottom:1px solid var(--line); color:var(--blue); letter-spacing:.3px}
+  .fix{display:grid; grid-template-columns:minmax(0,1.3fr) 34px minmax(0,1fr); gap:10px; align-items:center; padding:11px 18px; border-bottom:1px solid var(--line); font-size:14.5px}
+  .fix:last-child{border-bottom:none}
+  .fix .arrow{color:var(--muted); text-align:center}
+  .fix .why{color:var(--muted); font-size:13px}
+  .fix .txt{overflow-wrap:anywhere}
+  .keep-row{background:var(--green-bg)}
+  .level-row{background:var(--amber-bg)}
+  .decor-row{background:var(--red-bg)}
+  .sizes{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:22px; margin-top:14px}
+  .bar{height:14px; border-radius:4px; background:var(--blue); margin:10px 0 4px}
+  .sizes small{color:var(--muted)}
+  .test{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:22px; margin-top:14px}
+  .test button{background:var(--card2); border:1px solid var(--line); color:var(--text); border-radius:10px; padding:12px 16px; margin:6px 8px 0 0; cursor:pointer; font-size:14.5px}
+  .test button.correct{border-color:var(--green); background:var(--green-bg)}
+  .test button.wrong{border-color:var(--red); background:var(--red-bg)}
+  .test .result{margin-top:12px; font-size:14px; color:var(--muted); min-height:22px}
+  .scorebar{font:700 15px/1.2 inherit; background:var(--card2); border:1px solid var(--line); border-radius:10px; padding:12px 16px; margin-bottom:6px; display:flex; justify-content:space-between; align-items:center}
+  .scorebar .reset{background:none; border:1px solid var(--line); color:var(--muted); border-radius:8px; padding:6px 12px; font-size:13px; cursor:pointer}
+  .q{padding:16px 0; border-bottom:1px solid var(--line)}
+  .q:last-of-type{border-bottom:none}
+  .q>p{font-size:15px; margin-bottom:2px}
+  .q .expl{display:none; margin-top:10px; font-size:13.5px; color:var(--muted); background:var(--card2); border-left:3px solid var(--blue); padding:8px 12px; border-radius:0 8px 8px 0}
+  .q.done .expl{display:block}
+  .q.done button{cursor:default; opacity:.75}
+  .q.done button.correct, .q.done button.wrong{opacity:1}
+  .verdict{margin-top:16px; font-size:16px; font-weight:600; display:none}
+  .up{display:grid; gap:8px; padding:14px 18px; border-bottom:1px solid var(--line); font-size:14.5px}
+  .up:last-child{border-bottom:none}
+  .lbl{display:inline-block; font:700 11px/1 ui-monospace,monospace; letter-spacing:.5px; padding:4px 7px; border-radius:5px; margin-right:8px}
+  .lbl.now{background:var(--amber-bg); color:var(--amber)}
+  .lbl.bet{background:var(--green-bg); color:var(--green)}
+  .lbl.stuff{background:var(--red-bg); color:var(--red)}
+  .up .whyline{color:var(--muted); font-size:13px}
+  .gram{display:inline-block; background:#20304a; color:#9ec1ff; border:1px solid #33487000; border-radius:6px; padding:3px 8px; font:600 12px/1.4 ui-monospace,monospace; margin:2px 3px 0 0}
+  .gram.place{background:#1f3a2d; color:#7fe0a8}
+  footer{margin-top:50px; text-align:center; color:var(--muted); font-size:13px}
+  @media(max-width:720px){ .stats{grid-template-columns:repeat(2,1fr)} .fix{grid-template-columns:1fr; gap:4px} .fix .arrow{display:none} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Heading Structure: Before &amp; After</h1>
+  <p>Real client homepage: The Auto Dent Repair (Aurora, CO). Every fix below is a real fix.</p>
+</header>
+
+<div class="stats">
+  <div class="stat"><b>54</b><span>headings on the page</span></div>
+  <div class="stat green"><b>14</b><span>were correct</span></div>
+  <div class="stat red"><b>28</b><span>are decoration/labels &rarr; become plain text</span></div>
+  <div class="stat amber"><b>12</b><span>real headings, wrong level</span></div>
+</div>
+
+<div class="rule">
+  <b>The only rule you need:</b> a heading is a label for a content section.<br>
+  If deleting the text would not remove a section of the page, <b>it is not a heading.</b>
+</div>
+
+<div class="legend">
+  <span><span class="dot" style="background:var(--green)"></span>Keep, already correct</span>
+  <span><span class="dot" style="background:var(--amber)"></span>Real heading, fix the level</span>
+  <span><span class="dot" style="background:var(--red)"></span>Decoration, change tag to <b>p</b></span>
+</div>
+
+<h2 class="sec">The full page, in three steps</h2>
+<p class="sub">Two lessons, three tabs. <b>Before</b> = what was shipped. <b>After</b> = lesson 1, correct structure (fix the tags). <b>Improved</b> = lesson 2, better words (entities + n-grams, planned with Kalraj, never changed by devs alone).</p>
+
+<div class="tabs">
+  <button id="btnBefore" class="active" onclick="show('before')">Before (what was built)</button>
+  <button id="btnAfter" onclick="show('after')">After (correct structure)</button>
+  <button id="btnImproved" onclick="show('improved')">Improved (better words)</button>
+</div>
+
+<div id="before" class="tree show">
+  <div class="row"><span class="tag h1">H1</span> Dent Repair &amp; Your One Stop Shop For Automotive Aesthetics.</div>
+  <div class="row"><span class="tag h4">H4</span> PROTECT YOUR INVESTMENT <span class="bad-note">decorative tagline + jumps H1&rarr;H4</span></div>
+  <div class="row"><span class="tag h2">H2</span> ABOUT US</div>
+  <div class="row"><span class="tag h2">H2</span> Our Mission <span class="bad-note">inside About, should sit one level down</span></div>
+  <div class="row"><span class="tag h2">H2</span> Clean Panel Lines <span class="bad-note">decoration got the H2</span></div>
+  <div class="row"><span class="tag h6">H6</span> Value Protection <span class="bad-note">kicker as heading, H2&rarr;H6 jump</span></div>
+  <div class="row"><span class="tag h3">H3</span> Paintless Dent Repair (PDR) <span class="bad-note">the REAL section name, demoted under decoration</span></div>
+  <div class="row"><span class="note">...same broken pattern repeats for all 6 services (Auto Hail Repair, Ceramic Coating, Paint Correction, Auto Detailing, Window Tinting)</span></div>
+  <div class="row"><span class="tag h2">H2</span> The Difference in Our Work</div>
+  <div class="row"><span class="tag h3">H3</span> 01 &nbsp;<span class="tag h3">H3</span> 02 &nbsp;<span class="tag h3">H3</span> 03 &nbsp;<span class="tag h3">H3</span> 04 <span class="bad-note">numbers are never headings</span></div>
+  <div class="row"><span class="tag h3">H3</span> Inspection &amp; Quote / Preparation &amp; Setup / Precision Work / Final Check &amp; Delivery</div>
+  <div class="row"><span class="tag h2">H2</span> Professional Auto Care in a Controlled Shop Environment</div>
+  <div class="row"><span class="tag h2">H2</span> Why Drivers Choose The Auto Dent Repair</div>
+  <div class="row"><span class="tag h5">H5</span> 01. Experienced And Trusted Team <span class="bad-note">H2&rarr;H5 jump + number baked into the text (x4 cards)</span></div>
+  <div class="row"><span class="tag h2">H2</span> Locally Trusted</div>
+  <div class="row"><span class="tag h4">H4</span> Trusted by Local Drivers in Aurora, CO and Beyond <span class="bad-note">H2&rarr;H4 jump</span></div>
+  <div class="row"><span class="tag h2">H2</span> Get Professional Dent Repair &amp; Auto Care in Aurora, CO</div>
+  <div class="row"><span class="tag h2">H2</span> Let&rsquo;s Protect Your Investment</div>
+  <div class="row"><span class="tag h5">H5</span> Phone Number / Email Address / Address / Working Hours: <span class="bad-note">contact labels as headings</span></div>
+  <div class="row"><span class="tag h2">H2</span> VERIFIED REVIEWS</div>
+  <div class="row"><span class="tag h2">H2</span> Our Recent work</div>
+  <div class="row"><span class="tag h4">H4</span> OUR SERVICES / SERVICE AREAS / OTHER LINKS / Working Hours / CONTACT US / FOLLOW US <span class="bad-note">navigation labels tagged as headings</span></div>
+  <div class="row"><span class="tag h6">H6</span> Trusted by industry leaders in automotive protection and restyling. <span class="bad-note">a sentence is not a heading</span></div>
+</div>
+
+<div id="after" class="tree">
+  <div class="row"><span class="tag h1">H1</span> Dent Repair &amp; Your One Stop Shop For Automotive Aesthetics.</div>
+  <div class="row i1"><span class="tag h2">H2</span> About Us</div>
+  <div class="row i2"><span class="tag h3">H3</span> Our Mission</div>
+  <div class="row i1"><span class="tag h2">H2</span> Paintless Dent Repair (PDR) <span class="note">service name promoted, taglines became plain text</span></div>
+  <div class="row i1"><span class="tag h2">H2</span> Auto Hail Repair</div>
+  <div class="row i1"><span class="tag h2">H2</span> Ceramic Coating</div>
+  <div class="row i1"><span class="tag h2">H2</span> Paint Correction</div>
+  <div class="row i1"><span class="tag h2">H2</span> Auto Detailing</div>
+  <div class="row i1"><span class="tag h2">H2</span> Window Tinting</div>
+  <div class="row i1"><span class="tag h2">H2</span> The Difference in Our Work</div>
+  <div class="row i2"><span class="tag h3">H3</span> Inspection &amp; Quote <span class="note">01-04 are now styled plain text</span></div>
+  <div class="row i2"><span class="tag h3">H3</span> Preparation &amp; Setup</div>
+  <div class="row i2"><span class="tag h3">H3</span> Precision Work</div>
+  <div class="row i2"><span class="tag h3">H3</span> Final Check &amp; Delivery</div>
+  <div class="row i1"><span class="tag h2">H2</span> Professional Auto Care in a Controlled Shop Environment</div>
+  <div class="row i1"><span class="tag h2">H2</span> Why Drivers Choose The Auto Dent Repair</div>
+  <div class="row i2"><span class="tag h3">H3</span> Experienced and Trusted Team <span class="note">"01." removed from the text</span></div>
+  <div class="row i2"><span class="tag h3">H3</span> We Work With Insurance Claims</div>
+  <div class="row i2"><span class="tag h3">H3</span> Lifetime Workmanship Warranty</div>
+  <div class="row i2"><span class="tag h3">H3</span> Premium Products &amp; Certified Application</div>
+  <div class="row i1"><span class="tag h2">H2</span> Locally Trusted</div>
+  <div class="row i2"><span class="tag h3">H3</span> Trusted by Local Drivers in Aurora, CO and Beyond</div>
+  <div class="row i1"><span class="tag h2">H2</span> Get Professional Dent Repair &amp; Auto Care in Aurora, CO</div>
+  <div class="row i1"><span class="tag h2">H2</span> Let&rsquo;s Protect Your Investment <span class="note">Phone / Email / Address / Hours labels are plain text now</span></div>
+  <div class="row i1"><span class="tag h2">H2</span> Verified Reviews</div>
+  <div class="row i1"><span class="tag h2">H2</span> Our Recent Work</div>
+  <div class="row i1"><span class="tag p">p</span> Footer columns: Our Services, Service Areas, Other Links, Working Hours, Contact Us, Follow Us <span class="note">navigation labels, not content sections: styled plain text. The footer sentence is plain text too. The heading outline ends with the last content H2.</span></div>
+</div>
+
+<div id="improved" class="tree">
+  <div class="row"><span class="tag p" style="min-width:44px">TITLE</span> Paintless Dent Repair, Ceramic Coating &amp; Window Tinting in Aurora, CO | The Auto Dent Repair</div>
+  <div class="row"><span class="note">The formula: [2-3 top services] in [City, ST] | [Brand]. Keyword + City. Only services the client actually performs. Chunks Google gets for free: <span class="gram">paintless dent repair</span> <span class="gram">ceramic coating</span> <span class="gram">window tinting</span> <span class="gram place">Aurora, CO</span></span></div>
+  <div class="row" style="margin-top:8px"><span class="tag h1">H1</span> Dent Repair, Ceramic Coating &amp; Auto Aesthetics in Aurora, CO <span class="note">was: "Dent Repair &amp; Your One Stop Shop For Automotive Aesthetics." Same topic as the title, a little shorter. "One stop shop" is a chunk nobody searches; the city is an entity Google knows.</span></div>
+  <div class="row i1"><span class="tag h2">H2</span> About The Auto Dent Repair in Aurora, CO <span class="note">was: "About Us". Brand + city entities instead of empty words.</span></div>
+  <div class="row i2"><span class="tag h3">H3</span> Our Mission</div>
+  <div class="row i1"><span class="tag h2">H2</span> Paintless Dent Repair (PDR) <span class="note">services stay EXACTLY as they are. The names are already perfect entities. (Entity paragraph under each service = separate lesson, another day.)</span></div>
+  <div class="row i1"><span class="tag h2">H2</span> Auto Hail Repair</div>
+  <div class="row i1"><span class="tag h2">H2</span> Ceramic Coating</div>
+  <div class="row i1"><span class="tag h2">H2</span> Paint Correction</div>
+  <div class="row i1"><span class="tag h2">H2</span> Auto Detailing</div>
+  <div class="row i1"><span class="tag h2">H2</span> Window Tinting</div>
+  <div class="row i1"><span class="tag h2">H2</span> Our Dent Repair Process: From Inspection to Delivery <span class="note">was: "The Difference in Our Work". The test: read the old heading alone, can you guess what's under it? No. The new one announces the process and connects to its own H3 steps below.</span></div>
+  <div class="row i2"><span class="tag h3">H3</span> Inspection &amp; Quote</div>
+  <div class="row i2"><span class="tag h3">H3</span> Preparation &amp; Setup</div>
+  <div class="row i2"><span class="tag h3">H3</span> Precision Work</div>
+  <div class="row i2"><span class="tag h3">H3</span> Final Check &amp; Delivery</div>
+  <div class="row i1"><span class="tag h2">H2</span> Professional Auto Care in a Controlled Shop Environment <span class="note">keep, already carries meaning</span></div>
+  <div class="row i1"><span class="tag h2">H2</span> Why Drivers Choose The Auto Dent Repair <span class="note">keep, brand entity already in it</span></div>
+  <div class="row i2"><span class="tag h3">H3</span> Experienced and Trusted Team</div>
+  <div class="row i2"><span class="tag h3">H3</span> We Work With Insurance Claims</div>
+  <div class="row i2"><span class="tag h3">H3</span> Lifetime Workmanship Warranty</div>
+  <div class="row i2"><span class="tag h3">H3</span> Premium Products &amp; Certified Application</div>
+  <div class="row i1"><span class="tag h2">H2</span> Locally Trusted by Aurora, CO &amp; Surrounding Counties <span class="note">was: "Locally Trusted". Trusted by whom, where? Now it holds <span class="gram place">Aurora, CO</span> and sits right above the city buttons (Denver, Green Valley Ranch, Montbello, Sterling Hills, Englewood), so heading and content confirm each other. Alt: "Serving Aurora, CO &amp; Surrounding Arapahoe County Cities".</span></div>
+  <div class="row i2"><span class="tag h3">H3</span> Trusted by Local Drivers in Aurora, CO and Beyond <span class="note">keep, city already in it</span></div>
+  <div class="row i1"><span class="tag h2">H2</span> Get Professional Dent Repair &amp; Auto Care in Aurora, CO <span class="note">keep, this is the MODEL heading: service chunk + city entity + natural sentence. Every important H2 should meet this bar.</span></div>
+  <div class="row i1"><span class="tag h2">H2</span> Let&rsquo;s Protect Your Investment <span class="note">keep, CTA section, brand voice is fine here</span></div>
+  <div class="row i1"><span class="tag h2">H2</span> Verified Reviews</div>
+  <div class="row i1"><span class="tag h2">H2</span> Our Recent Work</div>
+  <div class="row i1"><span class="tag p">p</span> Footer columns: Our Services, Service Areas, Other Links, Working Hours, Contact Us, Follow Us <span class="note">styled labels, no heading tags</span></div>
+  <div class="row" style="margin-top:12px"><span class="note"><b style="color:var(--red)">Never stuff:</b> "Aurora Dent Repair | Best Dent Repair Aurora | Aurora Hail Repair Aurora" is the same entity repeated with no grammar. One entity, once, in a natural sentence, where the content proves it. That is the whole trick.</span></div>
+</div>
+
+<h2 class="sec">Every fix, section by section</h2>
+<p class="sub">Left = what was built. Right = what it becomes. Row color tells you the fix type.</p>
+
+<div class="fixes">
+
+  <div class="section-card"><h3>HERO</h3>
+    <div class="fix keep-row"><span class="txt"><span class="tag h1">H1</span> Dent Repair &amp; Your One Stop Shop...</span><span class="arrow">&rarr;</span><span class="why"><span class="tag h1">H1</span> Keep. One H1 per page, this is it.</span></div>
+    <div class="fix decor-row"><span class="txt"><span class="tag h4">H4</span> PROTECT YOUR INVESTMENT</span><span class="arrow">&rarr;</span><span class="why"><span class="tag p">p</span> Tagline. Deleting it loses no section.</span></div>
+  </div>
+
+  <div class="section-card"><h3>ABOUT</h3>
+    <div class="fix keep-row"><span class="txt"><span class="tag h2">H2</span> ABOUT US</span><span class="arrow">&rarr;</span><span class="why"><span class="tag h2">H2</span> Keep. Top-level section.</span></div>
+    <div class="fix level-row"><span class="txt"><span class="tag h2">H2</span> Our Mission</span><span class="arrow">&rarr;</span><span class="why"><span class="tag h3">H3</span> Lives inside About, so one level down.</span></div>
+  </div>
+
+  <div class="section-card"><h3>SERVICES &mdash; same 3-line fix on all 6 blocks</h3>
+    <div class="fix decor-row"><span class="txt"><span class="tag h2">H2</span> Clean Panel Lines <em>(and Panel Restoration, Deep Gloss Finish, Swirl Removal, Detail Renewal, Heat Control)</em></span><span class="arrow">&rarr;</span><span class="why"><span class="tag p">p</span> Decorative taglines. Style them, don't tag them.</span></div>
+    <div class="fix decor-row"><span class="txt"><span class="tag h6">H6</span> Value Protection <em>(and Impact Recovery, Surface Protection, Restore Clarity, Surface Refresh, UV Defense)</em></span><span class="arrow">&rarr;</span><span class="why"><span class="tag p">p</span> Kicker labels. Same story.</span></div>
+    <div class="fix level-row"><span class="txt"><span class="tag h3">H3</span> Paintless Dent Repair (PDR) <em>(and the other 5 service names)</em></span><span class="arrow">&rarr;</span><span class="why"><span class="tag h2">H2</span> The service NAME is the real section heading. It was demoted under its own decoration.</span></div>
+  </div>
+
+  <div class="section-card"><h3>PROCESS &mdash; The Difference in Our Work</h3>
+    <div class="fix keep-row"><span class="txt"><span class="tag h2">H2</span> The Difference in Our Work</span><span class="arrow">&rarr;</span><span class="why"><span class="tag h2">H2</span> Keep.</span></div>
+    <div class="fix decor-row"><span class="txt"><span class="tag h3">H3</span> 01, 02, 03, 04</span><span class="arrow">&rarr;</span><span class="why"><span class="tag p">p</span> Numbers are never headings.</span></div>
+    <div class="fix keep-row"><span class="txt"><span class="tag h3">H3</span> Inspection &amp; Quote, Preparation &amp; Setup, Precision Work, Final Check &amp; Delivery</span><span class="arrow">&rarr;</span><span class="why"><span class="tag h3">H3</span> Keep. Real step titles.</span></div>
+  </div>
+
+  <div class="section-card"><h3>WHY DRIVERS CHOOSE US</h3>
+    <div class="fix keep-row"><span class="txt"><span class="tag h2">H2</span> Why Drivers Choose The Auto Dent Repair</span><span class="arrow">&rarr;</span><span class="why"><span class="tag h2">H2</span> Keep.</span></div>
+    <div class="fix level-row"><span class="txt"><span class="tag h5">H5</span> 01. Experienced And Trusted Team <em>(all 4 cards)</em></span><span class="arrow">&rarr;</span><span class="why"><span class="tag h3">H3</span> Two bugs at once: H2&rarr;H5 jump, and the "01." belongs in a styled element, not the heading text.</span></div>
+  </div>
+
+  <div class="section-card"><h3>LOCALLY TRUSTED + CTA</h3>
+    <div class="fix keep-row"><span class="txt"><span class="tag h2">H2</span> Locally Trusted</span><span class="arrow">&rarr;</span><span class="why"><span class="tag h2">H2</span> Keep.</span></div>
+    <div class="fix level-row"><span class="txt"><span class="tag h4">H4</span> Trusted by Local Drivers in Aurora, CO and Beyond</span><span class="arrow">&rarr;</span><span class="why"><span class="tag h3">H3</span> No skipping. H2&rarr;H3, never H2&rarr;H4.</span></div>
+    <div class="fix keep-row"><span class="txt"><span class="tag h2">H2</span> Get Professional Dent Repair &amp; Auto Care in Aurora, CO</span><span class="arrow">&rarr;</span><span class="why"><span class="tag h2">H2</span> Keep. Bonus: it names the city.</span></div>
+  </div>
+
+  <div class="section-card"><h3>CONTACT BLOCK</h3>
+    <div class="fix keep-row"><span class="txt"><span class="tag h2">H2</span> Let&rsquo;s Protect Your Investment</span><span class="arrow">&rarr;</span><span class="why"><span class="tag h2">H2</span> Keep.</span></div>
+    <div class="fix decor-row"><span class="txt"><span class="tag h5">H5</span> Phone Number, Email Address, Address, Working Hours:</span><span class="arrow">&rarr;</span><span class="why"><span class="tag p">p</span> Field labels, not sections.</span></div>
+  </div>
+
+  <div class="section-card"><h3>REVIEWS + PORTFOLIO</h3>
+    <div class="fix keep-row"><span class="txt"><span class="tag h2">H2</span> VERIFIED REVIEWS</span><span class="arrow">&rarr;</span><span class="why"><span class="tag h2">H2</span> Keep.</span></div>
+    <div class="fix keep-row"><span class="txt"><span class="tag h2">H2</span> Our Recent work</span><span class="arrow">&rarr;</span><span class="why"><span class="tag h2">H2</span> Keep. Fix capitalization: "Our Recent Work".</span></div>
+  </div>
+
+  <div class="section-card"><h3>FOOTER</h3>
+    <div class="fix decor-row"><span class="txt"><span class="tag h4">H4</span> OUR SERVICES, SERVICE AREAS, OTHER LINKS, Working Hours, CONTACT US, FOLLOW US</span><span class="arrow">&rarr;</span><span class="why"><span class="tag p">p</span> Navigation labels, not content sections. The delete test fails, so no heading tag. The H2&rarr;H4 jump disappears with them.</span></div>
+    <div class="fix decor-row"><span class="txt"><span class="tag h6">H6</span> Trusted by industry leaders in automotive protection and restyling.</span><span class="arrow">&rarr;</span><span class="why"><span class="tag p">p</span> A sentence is a caption, never a heading.</span></div>
+  </div>
+
+</div>
+
+<h2 class="sec">Size check (do this after retagging)</h2>
+<div class="sizes">
+  <div class="bar" style="width:100%"></div><small>H1 &mdash; biggest thing on the page, always</small>
+  <div class="bar" style="width:74%; opacity:.85"></div><small>H2 &mdash; smaller than H1</small>
+  <div class="bar" style="width:52%; opacity:.7"></div><small>H3 &mdash; smaller than H2</small>
+  <div class="bar" style="width:34%; opacity:.5"></div><small>p (old taglines/kickers) &mdash; styled small, they lost their heading tags, now keep them visually small too</small>
+</div>
+
+<h2 class="sec">Test yourself</h2>
+<div class="test" id="quiz">
+  <div class="scorebar"><span id="scoretext">Score: 0 / 10 &mdash; answered 0</span><button class="reset" onclick="resetQuiz()">Reset quiz</button></div>
+
+  <div class="q">
+    <p>1. Which of these should be a real heading?</p>
+    <button onclick="pick(this)">Deep Gloss Finish</button>
+    <button data-ok="1" onclick="pick(this)">Ceramic Coating</button>
+    <button onclick="pick(this)">02.</button>
+    <button onclick="pick(this)">Trusted by industry leaders in automotive protection and restyling.</button>
+    <div class="expl">Deleting "Ceramic Coating" would remove a section label, so it is a heading (H2). The others are decoration, a number, and a caption sentence: all <b>p</b>.</div>
+  </div>
+
+  <div class="q">
+    <p>2. Right under the H1 sits the big tagline "PROTECT YOUR INVESTMENT". Which tag does it get?</p>
+    <button onclick="pick(this)">H2</button>
+    <button onclick="pick(this)">H4</button>
+    <button data-ok="1" onclick="pick(this)">p</button>
+    <button onclick="pick(this)">H6</button>
+    <div class="expl">It is decoration. Deleting it loses no section. Tag it <b>p</b> and make it look pretty with CSS.</div>
+  </div>
+
+  <div class="q">
+    <p>3. "About Us" is an H2. "Our Mission" lives inside that section. What tag?</p>
+    <button onclick="pick(this)">H2</button>
+    <button data-ok="1" onclick="pick(this)">H3</button>
+    <button onclick="pick(this)">H4</button>
+    <button onclick="pick(this)">p</button>
+    <div class="expl">A heading inside a section sits exactly one level below its parent. H2 parent, H3 child.</div>
+  </div>
+
+  <div class="q">
+    <p>4. A section heading is H2. The first heading inside that section can only be...</p>
+    <button data-ok="1" onclick="pick(this)">H3</button>
+    <button onclick="pick(this)">H4</button>
+    <button onclick="pick(this)">H5</button>
+    <button onclick="pick(this)">Whatever size looks right</button>
+    <div class="expl">Levels step down one at a time, never skip. H2 to H4 or H2 to H6 is always a bug. Size is CSS, not the tag.</div>
+  </div>
+
+  <div class="q">
+    <p>5. The process step numbers 01, 02, 03, 04 should be tagged...</p>
+    <button onclick="pick(this)">H3</button>
+    <button onclick="pick(this)">H4</button>
+    <button onclick="pick(this)">H6</button>
+    <button data-ok="1" onclick="pick(this)">p</button>
+    <div class="expl">Numbers are never headings, not alone, not inside heading text. Styled <b>p</b> elements.</div>
+  </div>
+
+  <div class="q">
+    <p>6. The card title "01. Experienced And Trusted Team" is an H5 under an H2. The complete fix is...</p>
+    <button onclick="pick(this)">Keep it H5</button>
+    <button onclick="pick(this)">Just change it to H3</button>
+    <button data-ok="1" onclick="pick(this)">Change to H3 AND remove "01." from the text</button>
+    <button onclick="pick(this)">Make the whole thing p</button>
+    <div class="expl">Two bugs in one element: the H2-to-H5 jump AND the number baked into the heading words. Half a fix is still a bug.</div>
+  </div>
+
+  <div class="q">
+    <p>7. Footer column titles (OUR SERVICES, CONTACT US, FOLLOW US) should be...</p>
+    <button onclick="pick(this)">H2</button>
+    <button onclick="pick(this)">H3</button>
+    <button onclick="pick(this)">H4</button>
+    <button data-ok="1" onclick="pick(this)">p</button>
+    <div class="expl">Apply the test: deleting "FOLLOW US" removes no content section, it is a navigation label. Tag them <b>p</b>, styled bold. Bonus: the H2-to-H4 jump footers always create disappears with them. Headings are for content only.</div>
+  </div>
+
+  <div class="q">
+    <p>8. Which title tag follows the formula?</p>
+    <button onclick="pick(this)">Home | The Auto Dent Repair</button>
+    <button data-ok="1" onclick="pick(this)">Paintless Dent Repair, Ceramic Coating &amp; Window Tinting in Aurora, CO | The Auto Dent Repair</button>
+    <button onclick="pick(this)">Aurora Dent Repair Best Dent Repair Aurora Hail Repair Aurora</button>
+    <button onclick="pick(this)">Dent Repair, PPF &amp; Marine Tint in Aurora, CO | The Auto Dent Repair</button>
+    <div class="expl">[2-3 top services] in [City, ST] | [Brand]. The third option is keyword stuffing. The fourth lists services the client does not perform, never invent a service.</div>
+  </div>
+
+  <div class="q">
+    <p>9. Best rewrite of the H2 "Locally Trusted"?</p>
+    <button onclick="pick(this)">Keep it, sounds nice</button>
+    <button onclick="pick(this)">Aurora Dent Repair | Best Dent Repair Aurora</button>
+    <button data-ok="1" onclick="pick(this)">Locally Trusted by Aurora, CO &amp; Surrounding Counties</button>
+    <button onclick="pick(this)">LOCALLY TRUSTED!!!</button>
+    <div class="expl">Place entity, natural sentence, and it sits above the city buttons that prove it. Option 2 is stuffing: the same entity repeated with no grammar.</div>
+  </div>
+
+  <div class="q">
+    <p>10. "The Difference in Our Work" fails which test?</p>
+    <button onclick="pick(this)">Too short</button>
+    <button onclick="pick(this)">Not written in caps</button>
+    <button data-ok="1" onclick="pick(this)">Read it alone, you cannot predict the content under it</button>
+    <button onclick="pick(this)">Missing an exclamation mark</button>
+    <div class="expl">The cover-the-page test. A heading must announce its section. Better: "Our Dent Repair Process: From Inspection to Delivery".</div>
+  </div>
+
+  <div class="verdict" id="verdict"></div>
+</div>
+
+<footer>Shop Positioner internal training. Example: The Auto Dent Repair homepage. Questions or word changes: ask Kalraj first.</footer>
+
+</div>
+<script>
+function show(which){
+  ['before','after','improved'].forEach(function(id){
+    document.getElementById(id).classList.toggle('show', which===id);
+  });
+  document.getElementById('btnBefore').classList.toggle('active', which==='before');
+  document.getElementById('btnAfter').classList.toggle('active', which==='after');
+  document.getElementById('btnImproved').classList.toggle('active', which==='improved');
+}
+var TOTAL = 10, answered = 0, score = 0;
+function pick(btn){
+  var q = btn.closest('.q');
+  if(q.classList.contains('done')) return;
+  q.classList.add('done');
+  var ok = btn.getAttribute('data-ok') === '1';
+  btn.classList.add(ok ? 'correct' : 'wrong');
+  if(!ok){
+    q.querySelectorAll('button').forEach(function(b){
+      if(b.getAttribute('data-ok') === '1') b.classList.add('correct');
+    });
+  }
+  answered++; if(ok) score++;
+  updateScore();
+  if(answered === TOTAL) showVerdict();
+}
+function updateScore(){
+  document.getElementById('scoretext').innerHTML = 'Score: ' + score + ' / ' + TOTAL + ' &mdash; answered ' + answered;
+}
+function showVerdict(){
+  var v = document.getElementById('verdict'), msg, color;
+  if(score === 10){ msg = '10/10. Perfect. You are cleared to retag pages.'; color = 'var(--green)'; }
+  else if(score >= 8){ msg = score + '/10. Good. Re-read the explanations you missed, then you are set.'; color = 'var(--green)'; }
+  else if(score >= 5){ msg = score + '/10. Not yet. Go through the three tabs again, then reset and retake.'; color = 'var(--amber)'; }
+  else { msg = score + '/10. Stop. Do not retag anything. Read this page again from the top.'; color = 'var(--red)'; }
+  v.textContent = msg; v.style.color = color; v.style.display = 'block';
+}
+function resetQuiz(){
+  answered = 0; score = 0;
+  document.querySelectorAll('#quiz .q').forEach(function(q){
+    q.classList.remove('done');
+    q.querySelectorAll('button').forEach(function(b){ b.classList.remove('correct','wrong'); });
+  });
+  document.getElementById('verdict').style.display = 'none';
+  updateScore();
+}
+</script>
+</body>
+</html>
